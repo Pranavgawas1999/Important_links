@@ -8,7 +8,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // MongoDB connection
-mongoose.connect('your_mongo_connection_URI', {
+mongoose.connect('process.env.MONGO_URI', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -25,6 +25,10 @@ app.post('/api/links', async (req, res) => {
   const newLink = new Link({ url });
   await newLink.save();
   res.status(201).json(newLink);
+});
+
+app.get('/', (req, res) => {
+  res.send('Welcome to the API');
 });
 
 app.get('/api/links', async (req, res) => {
