@@ -1,42 +1,47 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+import Link from './models/Link.js'; // Add `.js` extension for ES modules
 
-// Import Routes
-import savedLinkRoutes from './routes/savedLinkRoutes.js';
-import imageLinkRoutes from './routes/imageLinkRoutes.js';
-
-// Load environment variables
 dotenv.config();
 
-// Initialize Express App
 const app = express();
-
-// Middleware
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
-// MongoDB Connection
-mongoose.connect('process.env.MONGO_URI', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-  .then(() => console.log('Connected to MongoDB'))
-  .catch((error) => console.error('MongoDB connection error:', error));
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.error('MongoDB connection error:', err));
 
-// Routes
-app.use('/api/saved-links', savedLinkRoutes); // Route for saved links
-app.use('/api/image-links', imageLinkRoutes); // Route for image links
-
-// Default Route
-app.get('/', (req, res) => {
-  res.send('Welcome to the API');
+app.post('/links', async (req, res) => {
+    try {
+        const link = new Link(req.body);
+        await link.save();
+        res.status(201).json(link);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
-// Start the Server
-const PORT = 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.get('/links', async (req, res) => {
+    try {
+        const links = await Link.find();
+        res.json(links);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
+
+app.delete('/links/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Link.findByIdAndDelete(id);
+        res.json({ message: 'Link deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
