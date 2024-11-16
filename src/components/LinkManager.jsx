@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const backendURL = "http://localhost:5000/links";
+const backendURL = "https://bug-free-dollop-g45prw4wv4xvc7rq-5000.app.github.dev";
 
 function LinkManager() {
   const [links, setLinks] = useState([]);
@@ -10,7 +10,7 @@ function LinkManager() {
   // Fetch Links from Backend
   const fetchLinks = async () => {
     try {
-      const response = await axios.get(`${backendURL}/links`);
+      const response = await axios.get(`${backendURL}/Links`);
       setLinks(response.data);
     } catch (error) {
       console.error("Error fetching links:", error);
@@ -21,7 +21,7 @@ function LinkManager() {
   const addLink = async () => {
     if (!url) return;
     try {
-      const response = await axios.post(`${backendURL}/links`, { url });
+      const response = await axios.post(`${backendURL}/Links`, { url });
       setLinks([...links, response.data]);
       setUrl("");
     } catch (error) {
@@ -32,7 +32,7 @@ function LinkManager() {
   // Delete a Link
   const deleteLink = async (id) => {
     try {
-      await axios.delete(`${backendURL}/links/${id}`);
+      await axios.delete(`${backendURL}/Links/${id}`);
       setLinks(links.filter((link) => link._id !== id));
     } catch (error) {
       console.error("Error deleting link:", error);

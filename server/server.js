@@ -14,7 +14,7 @@ mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.error('MongoDB connection error:', err));
 
-app.post('/links', async (req, res) => {
+app.post('/Links', async (req, res) => {
     try {
         const link = new Link(req.body);
         await link.save();
@@ -24,7 +24,7 @@ app.post('/links', async (req, res) => {
     }
 });
 
-app.get('/links', async (req, res) => {
+app.get('/Links', async (req, res) => {
     try {
         const links = await Link.find();
         res.json(links);
@@ -33,7 +33,7 @@ app.get('/links', async (req, res) => {
     }
 });
 
-app.delete('/links/:id', async (req, res) => {
+app.delete('/Links/:id', async (req, res) => {
     try {
         const { id } = req.params;
         await Link.findByIdAndDelete(id);
