@@ -12,7 +12,7 @@ import {
   Link as LinkIcon,
 } from "lucide-react";
 
-const backendURL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+const backendURL = "https://important-links.onrender.com";
 
 function LinkManager() {
   const [view, setView] = useState("saved");
